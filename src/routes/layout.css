@@ -208,11 +208,13 @@ h2 { margin: 1.5rem 0 0.75rem; font-size: 1.15rem; line-height: 1.25; }
 [dir="rtl"] .profile-banner strong { text-align: right; }
 [dir="rtl"] .pointer { right: auto; left: 0.5rem; transform: rotate(90deg); }
 
-@media (max-width: 31rem) {
+@media (max-width: 64rem) {
   .page-shell { padding: 0; display: block; }
   .desktop-brand, .annotations { display: none; }
   .phone-frame { max-width: none; min-height: 100vh; padding: 0; border-radius: 0; background: var(--background); box-shadow: none; }
-  .phone-app { min-height: 100vh; height: 100vh; border-radius: 0; }
+  .phone-app { min-height: 100vh; height: 100dvh; border-radius: 0; padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)); }
+  .bottom-nav { left: 0; right: 0; width: 100%; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .screen-content { max-width: 40rem; margin-inline: auto; }
 }
 
 @media (max-width: 22rem) {
@@ -227,5 +229,6 @@ h2 { margin: 1.5rem 0 0.75rem; font-size: 1.15rem; line-height: 1.25; }
   .page-shell { padding: 0; }
   .desktop-brand, .annotations { display: none; }
   .phone-frame { max-width: 100%; min-height: 100vh; padding: 0; border-radius: 0; }
-  .phone-app { height: 100vh; min-height: 100vh; border-radius: 0; }
+  .phone-app { height: 100dvh; min-height: 100vh; border-radius: 0; padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)); }
+  .bottom-nav { left: 0; right: 0; width: 100%; padding-bottom: env(safe-area-inset-bottom, 0px); }
 }
