@@ -1,8 +1,14 @@
 <script lang="ts">
 	import Icon from './Icon.svelte';
-	import type { Copy, IconName } from './copy';
+	import { listen } from './listen';
+	import type { Copy, IconName, Language } from './copy';
 
-	let { t, onExit, speak }: { t: Copy; onExit: () => void; speak: (text: string) => void } = $props();
+	let { t, language, onExit, speak }: {
+		t: Copy;
+		language: Language;
+		onExit: () => void;
+		speak: (text: string) => void;
+	} = $props();
 
 	let step = $state(0);
 	let confirmation = $state('');
@@ -10,6 +16,7 @@
 	let showing = $state(false);
 	let quiet = $state(false);
 	let reply = $state('');
+	let listening = $state(false);
 
 	const icons: IconName[] = ['spark', 'voice', 'translate', 'check'];
 	const inputTarget = $derived(step === 1 || step === 2 ? step : -1);
@@ -68,6 +75,25 @@
 		const first = reply.length === 0 && v.length > 0;
 		reply = v;
 		if (step === 2 && first) complete();
+	}
+
+	async function mic() {
+		if (step !== 2 || listening) return;
+		window.speechSynthesis?.cancel();
+		listening = true;
+		notice = '🎤 …';
+		try {
+			const text = await listen(language);
+			notice = '';
+			if (text) {
+				const first = reply.length === 0;
+				reply = text;
+				if (first) complete();
+			}
+		} catch {
+			notice = t.wrong;
+		}
+		listening = false;
 	}
 
 	function mockClick(e: MouseEvent) {
@@ -132,6 +158,9 @@
 							oninput={typed}
 						/>
 					</div>
+					<button class="send-button" aria-label="Mikrofon" disabled={step !== 2 || listening} onclick={mic}>
+						<Icon name="voice" size={22} />
+					</button>
 					<div class={cls(3)}>
 						{#if step === 3}
 							<span class="pointer" aria-label="Pilen pekar på rätt val"><Icon name="arrow" size={34} /></span>
