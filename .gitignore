@@ -30,3 +30,4 @@ project.inlang/cache/
 
 server/.venv/
 server/__pycache__/
+/.venv
