@@ -48,7 +48,7 @@
 						<Icon name="voice" size={20} /><span>{t.voice}</span>
 					</button>
 					<label class="language-control">
-						<Icon name="globe" size={20} />
+						<span aria-hidden="true" style="font-size:1.25rem">{({ sv: '🇸🇪', en: '🇬🇧', so: '🇸🇴', ar: 'ع' })[language]}</span>
 						<span class="language-label">{t.language}</span>
 						<select class="language-select-overlay" bind:value={language} aria-label={t.language}>
 							<option value="sv">Svenska</option>
