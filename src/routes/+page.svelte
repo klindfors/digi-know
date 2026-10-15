@@ -14,15 +14,24 @@
 		document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
 	});
 
-	const voices: Record<Language, string> = { sv: 'sv-SE', ar: 'ar', so: 'so', en: 'en-GB' };
+	const voices: Record<Language, string> = { sv: 'sv-SE', ar: 'ar', so: 'so', en: 'en-GB', ti:'ti' };
 
-	function speak(text: string) {
-		if (!('speechSynthesis' in window)) return;
-		window.speechSynthesis.cancel();
-		const u = new SpeechSynthesisUtterance(text);
-		u.lang = voices[language];
-		window.speechSynthesis.speak(u);
+function speak(text: string) {
+	if (!('speechSynthesis' in window)) return;
+	window.speechSynthesis.cancel();
+	const u = new SpeechSynthesisUtterance(text);
+	const prefix = voices[language];
+	const voice = window.speechSynthesis
+		.getVoices()
+		.find((v) => v.lang.toLowerCase().startsWith(prefix));
+	if (voice) {
+		u.voice = voice;
+		u.lang = voice.lang;
+	} else {
+		u.lang = prefix;
 	}
+	window.speechSynthesis.speak(u);
+}
 
 	function start(index: number) {
 		if (index === 1) screen = 'guide';
@@ -48,13 +57,14 @@
 						<Icon name="voice" size={20} /><span>{t.voice}</span>
 					</button>
 					<label class="language-control">
-						<span aria-hidden="true" style="font-size:1.25rem">{({ sv: '🇸🇪', en: '🇬🇧', so: '🇸🇴', ar: 'ع' })[language]}</span>
+						   <span aria-hidden="true" style="font-size:1.25rem">{({ sv: '🇸🇪', en: '🇬🇧', so: '🇸🇴', ar: 'ع', ti: '🇪🇷' })[language]}</span>
 						<span class="language-label">{t.language}</span>
 						<select class="language-select-overlay" bind:value={language} aria-label={t.language}>
 							<option value="sv">Svenska</option>
 							<option value="en">English</option>
 							<option value="ar">العربية</option>
 							<option value="so">Soomaali</option>
+							<option value="ti">ትግርኛ</option>
 						</select>
 					</label>
 				</div>
