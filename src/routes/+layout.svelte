@@ -1,5 +1,4 @@
 <script lang="ts">
-	import DemoLinks from './demo/DemoLinks.svelte';
 	import type { Path } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
@@ -13,6 +12,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<title>StegVis</title>
 </svelte:head>
 
 {@render children()}
@@ -22,5 +22,3 @@
 		<a href={resolve(localizeHref(page.url.pathname, { locale }) as Path)}>{locale}</a>
 	{/each}
 </div>
-
-<DemoLinks />
