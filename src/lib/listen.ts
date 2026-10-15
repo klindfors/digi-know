@@ -1,6 +1,6 @@
 let asr: any;
 
-const names = { sv: 'swedish', en: 'english', ar: 'arabic', so: 'somali' } as const;
+const names = { sv: 'swedish', en: 'english', ar: 'arabic', so: 'somali', ti: 'tigrinya' } as const;
 
 async function load() {
 	if (!asr) {
@@ -10,8 +10,8 @@ async function load() {
 	return asr;
 }
 
-export async function listen(language: keyof typeof names, ms = 5000): Promise<string> {
-	const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+export async function listen(language: string, ms = 5000): Promise<string> {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 	const rec = new MediaRecorder(stream);
 	const chunks: Blob[] = [];
 	rec.ondataavailable = (e) => chunks.push(e.data);
@@ -26,6 +26,7 @@ export async function listen(language: keyof typeof names, ms = 5000): Promise<s
 	const ctx = new AudioContext({ sampleRate: 16000 });
 	const audio = (await ctx.decodeAudioData(buf)).getChannelData(0);
 	const model = await load();
-	const out = await model(audio, { language: names[language], task: 'transcribe' });
-	return out.text.trim();
+    const lang = (names as Record<string, string>)[language];
+    if (!lang) throw new Error(`No in-browser model for ${language}`);
+    const out = await model(audio, { language: lang, task: 'transcribe' });	return out.text.trim();
 }
