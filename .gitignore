@@ -24,3 +24,7 @@ vite.config.ts.timestamp-*
 # Paraglide
 src/lib/paraglide
 project.inlang/cache/
+
+# Python demo server
+server/.venv/
+server/__pycache__/
