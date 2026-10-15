@@ -37,6 +37,7 @@ def get_model(engine, name):
     if key not in loaded:
         log.info("Loading %s:%s ...", engine, name)
         start = time.time()
+
         if engine == "faster":
             loaded[key] = WhisperModel(name, device="cpu", compute_type="int8")
         elif engine == "hf":
