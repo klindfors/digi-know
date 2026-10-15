@@ -84,7 +84,7 @@
 				</main>
 			{:else if screen === 'guide'}
 				{#key language}
-					<Guide {t} onExit={() => (screen = 'profile')} {speak} />
+						<Guide {t} {language} onExit={() => (screen = 'profile')} {speak} />
 				{/key}
 			{:else if screen === 'profile'}
 				<main class="screen-content profile-screen">
