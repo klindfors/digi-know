@@ -5,6 +5,7 @@
 	import UploadCvGuide from '../lib/UploadCvGuide.svelte';
 	import SafetyGuide from '../lib/SafetyGuide.svelte';
 	import ErrorMessageGuide from '../lib/ErrorMessageGuide.svelte';
+	import cityLogo from '../lib/assets/sthlmlogo.png';
 	import { getCopy, getTaskHeading, taskIcons, areaClasses, type Language } from '../lib/copy';
 
 	type Screen = 'tasks' | 'timetable' | 'guide' | 'practice' | 'profile' | 'teacher';
@@ -82,7 +83,7 @@ function speak(text: string) {
 				{#if screen !== 'tasks'}
 					<button class="icon-button" onclick={() => (screen = 'tasks')} aria-label="Gå tillbaka"><Icon name="back" /></button>
 				{:else}
-					<div class="mark" aria-hidden="true"><span>D</span></div>
+					<div class="city-logo"><img src={cityLogo} alt="Stockholms stad" /></div>
 				{/if}
 				<div class="header-actions">
 					<button class="tool-button" onclick={() => speak(readAloudText)}>
