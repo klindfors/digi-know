@@ -5,7 +5,6 @@
 	import UploadCvGuide from '../lib/UploadCvGuide.svelte';
 	import SafetyGuide from '../lib/SafetyGuide.svelte';
 	import ErrorMessageGuide from '../lib/ErrorMessageGuide.svelte';
-	import cityLogo from '../lib/assets/sthlmlogo.png';
 	import { getCopy, getTaskHeading, taskIcons, areaClasses, type Language } from '../lib/copy';
 
 	type Screen = 'tasks' | 'timetable' | 'guide' | 'practice' | 'profile' | 'teacher';
