@@ -1,13 +1,44 @@
 <script lang="ts">
 	import Icon from '../lib/Icon.svelte';
 	import Guide from '../lib/Guide.svelte';
-	import { getCopy, taskIcons, areaClasses, type Language } from '../lib/copy';
+	import TimetableGuide from '../lib/TimetableGuide.svelte';
+	import UploadCvGuide from '../lib/UploadCvGuide.svelte';
+	import SafetyGuide from '../lib/SafetyGuide.svelte';
+	import ErrorMessageGuide from '../lib/ErrorMessageGuide.svelte';
+	import { getCopy, getTaskHeading, taskIcons, areaClasses, type Language } from '../lib/copy';
 
-	type Screen = 'tasks' | 'guide' | 'profile' | 'teacher';
+	type Screen = 'tasks' | 'timetable' | 'guide' | 'practice' | 'profile' | 'teacher';
+
+	const lockInOrder = true;
+	const taskOrder = [0, 1, 2, 3, 4];
+	const cardTone = ['task-card-yellow', 'task-card-blue', 'task-card-orange', 'task-card-green', ''];
+	const abilityTone = ['ability-yellow', 'ability-blue', 'ability-orange', 'ability-green', ''];
+	const needTone = ['need-icon-orange', 'need-icon-green', 'need-icon-yellow'];
 
 	let screen = $state<Screen>('tasks');
 	let language = $state<Language>('sv');
+	let completedTasks = $state<number[]>([]);
+	let practiceTask = $state(2);
+	let exerciseInstruction = $state('');
 	const t = $derived(getCopy(language));
+
+	const readAloudText = $derived(
+		screen === 'tasks'
+			? `${getTaskHeading(language)}. ${t.chooseHint}`
+			: screen === 'profile'
+				? `${t.profileTitle}. ${t.profileHint}`
+				: screen === 'teacher'
+					? `${t.teacher}. ${t.teacherHint}`
+					: exerciseInstruction
+	);
+
+	function setInstruction(text: string) {
+		exerciseInstruction = text;
+	}
+
+	function completeTask(index: number) {
+		if (!completedTasks.includes(index)) completedTasks = [...completedTasks, index];
+	}
 
 	$effect(() => {
 		document.documentElement.lang = language;
@@ -34,30 +65,35 @@ function speak(text: string) {
 }
 
 	function start(index: number) {
-		if (index === 1) screen = 'guide';
-		else speak(t.tasks[index][1]);
+		if (index === 0) screen = 'timetable';
+		else if (index === 1) screen = 'guide';
+		else {
+			practiceTask = index;
+			screen = 'practice';
+		}
 	}
 </script>
 
 <div class="page-shell">
-	<div class="desktop-brand"><div class="brand-mark">S</div><span>StegVis</span></div>
+	<div class="desktop-brand"><div class="brand-mark">D</div><span>Digisteg</span></div>
 	<div class="phone-frame">
 		<div class="phone-app">
 			<header class="app-header">
 				{#if screen !== 'tasks'}
 					<button class="icon-button" onclick={() => (screen = 'tasks')} aria-label="Gå tillbaka"><Icon name="back" /></button>
 				{:else}
-					<div class="mark" aria-hidden="true"><span>S</span></div>
+					<div class="mark" aria-hidden="true"><span>D</span></div>
 				{/if}
 				<div class="header-actions">
-					<button
-						class="tool-button"
-						onclick={() => speak(screen === 'tasks' ? `${t.choose}. ${t.chooseHint}` : t.profileTitle)}
-					>
-						<Icon name="voice" size={20} /><span>{t.voice}</span>
+					<button class="tool-button" onclick={() => speak(readAloudText)}>
+						<svg class="icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M6 9a6 6 0 0 1 12 0c0 5-3 5.5-3 8a3 3 0 0 1-6 0" />
+							<path d="M10 9a2 2 0 1 1 4 0c0 2.5-2 2.7-2 5" />
+						</svg>
+						<span>{t.voice}</span>
 					</button>
 					<label class="language-control">
-						   <span aria-hidden="true" style="font-size:1.25rem">{({ sv: '🇸🇪', en: '🇬🇧', so: '🇸🇴', ar: 'ع', ti: '🇪🇷' })[language]}</span>
+						   <span class="language-flag" aria-hidden="true">{({ sv: '🇸🇪', en: '🇬🇧', so: '🇸🇴', ar: 'ع', ti: '🇪🇷' })[language]}</span>
 						<span class="language-label">{t.language}</span>
 						<select class="language-select-overlay" bind:value={language} aria-label={t.language}>
 							<option value="sv">Svenska</option>
@@ -73,17 +109,41 @@ function speak(text: string) {
 			{#if screen === 'tasks'}
 				<main class="screen-content task-screen">
 					<section class="intro">
-						<p class="eyebrow">STEGVIS</p>
-						<h1>{t.choose}</h1>
+						<p class="eyebrow">DIGISTEG</p>
+						<h1>{getTaskHeading(language)}</h1>
 						<p>{t.chooseHint}</p>
 					</section>
-					<div class="task-list">
-						{#each t.tasks as task, index (task[0])}
-							<button class="task-card {areaClasses[index]}" onclick={() => start(index)}>
-								<span class="task-icon"><Icon name={taskIcons[index]} size={28} /></span>
-								<span class="task-copy"><strong>{task[0]}</strong><span>{task[1]}</span><small>{t.areas[index]}</small></span>
-								<Icon name="chevron" />
-							</button>
+					<div class="task-list" role="group" aria-label={t.choose}>
+						{#each taskOrder as index, orderIndex (index)}
+							{@const task = t.tasks[index]}
+							{@const isComplete = completedTasks.includes(index)}
+							{@const isCurrent =
+								!isComplete &&
+								(!lockInOrder || orderIndex === 0 || completedTasks.includes(taskOrder[orderIndex - 1]))}
+							{@const isLocked = !isComplete && !isCurrent}
+							<div
+								class="task-step-item"
+								class:current={isCurrent}
+								class:completed={isComplete}
+								class:locked={isLocked}
+								class:last={orderIndex === taskOrder.length - 1}
+							>
+								<span class="step-marker" aria-hidden="true">
+									{#if isComplete}<Icon name="check" size={20} />{:else}{orderIndex + 1}{/if}
+								</span>
+								<button
+									class="task-card {areaClasses[index]} {cardTone[index]}"
+									disabled={isLocked}
+									onclick={() => start(index)}
+								>
+									<span class="task-icon"><Icon name={taskIcons[index]} size={28} /></span>
+									<span class="task-copy"><small>{t.areas[index]}</small><strong>{task[0]}</strong><span>{task[1]}</span></span>
+									<Icon name="chevron" />
+								</button>
+								{#if isLocked}
+									<span class="task-lock-overlay" aria-hidden="true"><Icon name="lock" size={30} /></span>
+								{/if}
+							</div>
 						{/each}
 					</div>
 					<button class="profile-banner" onclick={() => (screen = 'profile')}>
@@ -92,14 +152,63 @@ function speak(text: string) {
 						<Icon name="chevron" />
 					</button>
 				</main>
+			{:else if screen === 'timetable'}
+				{#key language}
+					<TimetableGuide
+						{t}
+						{language}
+						onExit={() => (screen = 'tasks')}
+						onComplete={() => completeTask(0)}
+						onInstructionChange={setInstruction}
+						{speak}
+					/>
+				{/key}
 			{:else if screen === 'guide'}
 				{#key language}
-						<Guide {t} {language} onExit={() => (screen = 'profile')} {speak} />
+						<Guide
+							{t}
+							{language}
+							onExit={() => (screen = 'profile')}
+							onComplete={() => completeTask(1)}
+							onInstructionChange={setInstruction}
+							{speak}
+						/>
+				{/key}
+			{:else if screen === 'practice'}
+				{#key language}
+					{#if practiceTask === 2}
+						<UploadCvGuide
+							{t}
+							{language}
+							onExit={() => (screen = 'tasks')}
+							onComplete={() => completeTask(2)}
+							onInstructionChange={setInstruction}
+							{speak}
+						/>
+					{:else if practiceTask === 3}
+						<SafetyGuide
+							{t}
+							{language}
+							onExit={() => (screen = 'tasks')}
+							onComplete={() => completeTask(3)}
+							onInstructionChange={setInstruction}
+							{speak}
+						/>
+					{:else}
+						<ErrorMessageGuide
+							{t}
+							{language}
+							onExit={() => (screen = 'tasks')}
+							onComplete={() => completeTask(4)}
+							onInstructionChange={setInstruction}
+							{speak}
+						/>
+					{/if}
 				{/key}
 			{:else if screen === 'profile'}
 				<main class="screen-content profile-screen">
 					<section class="intro">
-						<p class="eyebrow">DIGICOMP</p>
+						<p class="eyebrow">DIGCOMP</p>
 						<h1>{t.profileTitle}</h1>
 						<p>{t.profileHint}</p>
 					</section>
@@ -108,7 +217,7 @@ function speak(text: string) {
 					</div>
 					<div class="ability-list">
 						{#each t.abilities as ability, index (ability)}
-							<article class="ability-card {areaClasses[index]}">
+							<article class="ability-card {areaClasses[index]} {abilityTone[index]}">
 								<div class="ability-top">
 									<span class="task-icon"><Icon name={taskIcons[index]} /></span>
 									<strong>{t.areas[index]}</strong>
@@ -125,7 +234,7 @@ function speak(text: string) {
 			{:else}
 				<main class="screen-content teacher-screen">
 					<section class="intro">
-						<p class="eyebrow">STEGVIS FÖR LÄRARE</p>
+						<p class="eyebrow">DIGISTEG FÖR LÄRARE</p>
 						<h1>{t.teacher}</h1>
 						<p>{t.teacherHint}</p>
 					</section>
@@ -134,7 +243,7 @@ function speak(text: string) {
 					<div class="need-list">
 						{#each t.needs as need, index (need[0])}
 							{@const area = [2, 3, 0][index]}
-							<article class="need-card {areaClasses[area]}">
+							<article class="need-card {areaClasses[area]} {needTone[index]}">
 								<span class="task-icon"><Icon name={taskIcons[area]} /></span>
 								<p><strong>{need[0]}</strong><span>{need[1]}</span></p>
 							</article>
@@ -145,7 +254,12 @@ function speak(text: string) {
 			{/if}
 
 			<nav class="bottom-nav" aria-label="Huvudmeny">
-				<button class={screen === 'tasks' || screen === 'guide' ? 'active' : ''} onclick={() => (screen = 'tasks')}>
+				<button
+					class={screen === 'tasks' || screen === 'timetable' || screen === 'guide' || screen === 'practice'
+						? 'active'
+						: ''}
+					onclick={() => (screen = 'tasks')}
+				>
 					<Icon name="calendar" /><span>{t.home}</span>
 				</button>
 				<button class={screen === 'profile' ? 'active' : ''} onclick={() => (screen = 'profile')}>

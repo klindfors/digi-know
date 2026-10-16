@@ -1,12 +1,22 @@
 <script lang="ts">
 	import Icon from './Icon.svelte';
 	import { listen } from './listen';
+	import { getSpeechLabel } from './copy';
 	import type { Copy, IconName, Language } from './copy';
 
-	let { t, language, onExit, speak }: {
+	let {
+		t,
+		language,
+		onExit,
+		onComplete = () => {},
+		onInstructionChange = () => {},
+		speak
+	}: {
 		t: Copy;
 		language: Language;
 		onExit: () => void;
+		onComplete?: () => void;
+		onInstructionChange?: (text: string) => void;
 		speak: (text: string) => void;
 	} = $props();
 
@@ -21,6 +31,10 @@
 	const icons: IconName[] = ['spark', 'voice', 'translate', 'check'];
 	const inputTarget = $derived(step === 1 || step === 2 ? step : -1);
 
+	$effect(() => {
+		onInstructionChange(step < 4 ? t.steps[step] : `${t.finalTitle} ${t.finalQuestion}`);
+	});
+
 	function cls(n: number) {
 		return `guide-target ${step === n ? 'is-target' : ''} ${showing && step === n ? 'demonstrating' : ''}`;
 	}
@@ -34,6 +48,7 @@
 	}
 
 	function advance() {
+		if (step === 3) onComplete();
 		step++;
 		confirmation = '';
 		showing = false;
@@ -164,16 +179,13 @@
 						/>
 					</div>
 					<button
-						class="send-button"
+						class="mic-button"
 						class:recording={listening}
-						aria-label="Mikrofon"
+						aria-label={getSpeechLabel(language)}
 						disabled={step !== 2 || listening}
 						onclick={mic}
 					>
-						<svg class="icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-							<rect x="9" y="3" width="6" height="11" rx="3" />
-							<path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6" />
-						</svg>
+						<Icon name="microphone" size={22} />
 					</button>
 					<div class={cls(3)}>
 						{#if step === 3}
