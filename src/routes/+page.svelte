@@ -76,7 +76,7 @@ function speak(text: string) {
 </script>
 
 <div class="page-shell">
-	<div class="desktop-brand"><div class="brand-mark">D</div><span>Digisteg</span></div>
+	<div class="desktop-brand"><div class="brand-mark">D</div><span>DigiSteg</span></div>
 	<div class="phone-frame">
 		<div class="phone-app">
 			<header class="app-header">

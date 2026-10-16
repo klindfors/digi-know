@@ -12,7 +12,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>StegVis</title>
+	<title>DigiSteg</title>
 </svelte:head>
 
 {@render children()}
