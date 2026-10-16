@@ -1,4 +1,4 @@
-export type Language = 'sv' | 'en' | 'ar' | 'so'
+export type Language = 'sv' | 'en' | 'ar' | 'so' | 'ti'
 export type Copy = (typeof copy)[Language]
 export type IconName =
   | 'arrow' | 'back' | 'briefcase' | 'calendar' | 'check' | 'chevron' | 'document' | 'globe' | 'info'
@@ -82,6 +82,103 @@ export const copy = {
     tasks: [['Hel jadwalka', 'Arag waqtiga iyo goobta casharka xiga.'], ['Ka jawaab farriinta dugsiga', 'Akhri oo uga jawaab tallaabooyin fudud.'], ['Soo geli CV', 'Dooro oo dir fayl.'], ['Garo SMS been ah', 'Arag calaamadaha farriin aan sax ahayn.'], ['Xalli farriin qalad', 'Ogow waxaad samayn karto marka wax qaldamaan.']],
     areas: ['Macluumaad', 'Isgaarsiin', 'Abuur nuxur', 'Ammaan', 'Xallinta dhibaatada'], steps: ['Taabo farriinta dugsiga', 'Taabo sanduuqa qoraalka', 'Qor jawaabtaada', 'Taabo dir', 'Waa diyaar!'], supports: ['I tus', 'Kor u akhri', 'Turjun', 'Anigaa samaynaya'], showDesc: 'Dhaqdhaqaaqu wuxuu tusayaa meesha la taabto.', quietOn: 'Adigaa samaynaya. Haguhu wuu ku sugayaa.', wrong: 'Halkaas ma aha – tijaabi badhanka fallaartu tilmaamayso.', next: 'Tallaabada xigta', doneNotes: ['Waa diyaar! Farriinta waad furtay.', 'Waa diyaar! Hadda waad taqaan meesha lagu qoro.', 'Fiican! Jawaabtaadu waa diyaar.', 'Waa diyaar! Jawaabta waa la diray.'], school: 'Dugsiga Södergård', message: 'Salaan! Ma iman kartaa kulanka Khamiista saacadda 3?', placeholder: 'Qor jawaab', reply: 'Haa, waan imanayaa. Mahadsanid!', sent: 'La diray', finalTitle: 'Adigaa sameeyay.', finalQuestion: 'Ma rabtaa inaad mar kale ku celceliso?', again: 'Mar kale ku celceli', finish: 'Dhammaystir', profileTitle: 'Waxaad awooddo', profileHint: 'Kaydkaagu wuu koraa markaad hawlo dhab ah qabato.', newAbility: 'Awood cusub ayaa lagu daray', abilities: ['Waxaad macluumaad ka heli kartaa jadwal', 'Waxaad ku xiriiri kartaa dijitaal', 'Tallaabada xigta: ku celceli abuurista fayl', 'Tallaabada xigta: ku celceli garashada SMS been ah', 'Tallaabada xigta: ku celceli xallinta qalad'], teacher: 'Guudmarka kooxda', teacherHint: 'Wuxuu tusayaa baahida kooxda, ma aha qof qof.', group: 'Kooxda SFI C · 24 arday', needs: [['8 ka mid ah 24 arday', 'waxay u baahan yihiin faylasha lifaaqan'], ['6 ka mid ah 24 arday', 'waxay u baahan yihiin furaha sirta ammaan ah'], ['5 ka mid ah 24 arday', 'waxay u baahan yihiin raadinta macluumaad']], privacy: 'Ma jiro dabagal qofeed, diiwaan waqti ama isbarbardhig.',
   },
+  ti: {
+    choose: "እንታይ ክትገብር ትደሊ?",
+    chooseHint: "ሓደ ዕዮ ምረጽ። ሓንቲ ሓንቲ ስጉምቲ ኢና እንከይድ።",
+    voice: "ድምጺ",
+    language: "ቋንቋ",
+    home: "ዕዮታት",
+    profile: "ፕሮፋይለይ",
+    tasks: [
+      [
+        "ናይ ትምህርቲ ሰሌዳ ርኸብ",
+        "ሰዓትን ቦታን ናይ ዝመጽእ ትምህርትኻ ርአ።"
+      ],
+      [
+        "ንመልእኽቲ ካብ ቤት ትምህርቲ መልሲ ሃብ",
+        "ብቀሊል ስጉምታት ኣንብብን መልሲ ሃብን።"
+      ],
+      [
+        "ሲቪ ስደድ",
+        "ፋይል ምረጽን ስደድን።"
+      ],
+      [
+        "ሓሶት ናይ ጽሑፍ መልእኽቲ ለለ",
+        "እቲ ጽሑፍ ሓቀኛ ከምዘይኮነ ዘርእዩ ምልክታት ርአ።"
+      ],
+      [
+        "ናይ ጌጋ መልእኽቲ ፍታሕ",
+        "ገለ ነገር ክጋገ ከሎ እንታይ ክትገብር ከም ዘለካ ፍለጥ።"
+      ]
+    ],
+    areas: [
+      "ሓበሬታ",
+      "ርክብ",
+      "ትሕዝቶ ምፍጣር",
+      "ድሕንነት",
+      "ጸገም ምፍታሕ"
+    ],
+    steps: [
+      "ነቲ ካብ ቤት ትምህርቲ መልእኽቲ ጠውቖ",
+      "ነታ ሳጹን ጽሑፍ ጠውቓ",
+      "መልስኻ ጽሓፍ",
+      "ስደድ ጠውቕ",
+      "ተወዲኡ!"
+    ],
+    supports: [
+      "ኣርእየኒ",
+      "ብዓውታ ኣንብብ",
+      "ተርጉም",
+      "ባዕለይ ክገብሮ እየ"
+    ],
+    showDesc: "እቲ ኣኒሜሽን እንታይ ከም እትጠውቕ የርእየካ።",
+    quietOn: "ባዕልኻ ትገብር ኣለኻ። እቲ መምርሒ ክጽበ እዩ።",
+    wrong: "ኣብኡ ኣይኮነን – እቲ ምልክት ዘመልክቶ መጠወቒ ፈትን።",
+    next: "ዝቕጽል ስጉምቲ",
+    doneNotes: [
+      "ተወዲኡ! እቲ መልእኽቲ ከፊትካዮ።",
+      "ተወዲኡ! ሕጂ ኣበይ ክትጽሕፍ ከም ዘለካ ትፈልጥ ኢኻ።",
+      "ብሉጽ! መልስኻ ድሉው እዩ።",
+      "ተወዲኡ! መልስኻ ተላኢኹ።"
+    ],
+    school: "Södergård School",
+    message: "ሰላም! ሓሙስ ሰዓት 3 ድሕሪ ቀትሪ ናብ ኣኼባ ክትመጽእ ትኽእል ዲኻ?",
+    placeholder: "መልሲ ጽሓፍ",
+    reply: "እወ፡ ክመጽእ እየ። የቐንየለይ!",
+    sent: "ተላኢኹ",
+    finalTitle: "ባዕልኻ ገበርካዮ።",
+    finalQuestion: "ደጊምካ ክትለማመድ ትደሊ ዲኻ?",
+    again: "ደጊምካ ተለማመድ",
+    finish: "ወድእ",
+    profileTitle: "እንታይ ክትገብር ከም እትኽእል",
+    profileHint: "ሓቀኛ ዕዮታት ምስ ወዳእካ ፕሮፋይልካ የዕቢ።",
+    newAbility: "ሓድሽ ክእለት ተወሲኹ",
+    abilities: [
+      "ኣብ ሰሌዳ ሓበሬታ ክትርኽብ ትኽእል ኢኻ",
+      "ብዲጂታል ክትራኸብ ትኽእል ኢኻ",
+      "ዝቕጽል ስጉምቲ፡ ፋይል ምፍጣር ተለማመድ",
+      "ዝቕጽል ስጉምቲ፡ ሓሶት መልእኽትታት ምፍላጥ ተለማመድ",
+      "ዝቕጽል ስጉምቲ፡ ጌጋ ምፍታሕ ተለማመድ"
+    ],
+    teacher: "ሓፈሻዊ ርእይቶ ናይ ጉጅለ",
+    teacherHint: "ድሌታት ናይ ጉጅለ የርኢ – ናይ ውልቀ ተመሃራይ ንጥፈታት ፈጺሙ ኣየርኢን።",
+    group: "SFI ጉጅለ C · 24 ተመሃሮ",
+    needs: [
+      [
+        "8 ካብ 24 ተመሃሮ",
+        "ዝተሓወሱ ፋይላት ክለማመዱ የድልዮም"
+      ],
+      [
+        "6 ካብ 24 ተመሃሮ",
+        "ድሕነታዊ ቃላት ምስጢር ክለማመዱ የድልዮም"
+      ],
+      [
+        "5 ካብ 24 ተመሃሮ",
+        "ሓበሬታ ምድላይ ክለማመዱ የድልዮም"
+      ]
+    ],
+    privacy: "ውልቃዊ ክትትል፣ መዝገብ ሰዓት ወይ ንጽጽር የለን።"
+  }
 } as const
 
 export const taskIcons: IconName[] = ['calendar', 'message', 'document', 'shield', 'tools']

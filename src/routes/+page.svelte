@@ -14,15 +14,24 @@
 		document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
 	});
 
-	const voices: Record<Language, string> = { sv: 'sv-SE', ar: 'ar', so: 'so', en: 'en-GB' };
+	const voices: Record<Language, string> = { sv: 'sv-SE', ar: 'ar', so: 'so', en: 'en-GB', ti:'ti' };
 
-	function speak(text: string) {
-		if (!('speechSynthesis' in window)) return;
-		window.speechSynthesis.cancel();
-		const u = new SpeechSynthesisUtterance(text);
-		u.lang = voices[language];
-		window.speechSynthesis.speak(u);
+function speak(text: string) {
+	if (!('speechSynthesis' in window)) return;
+	window.speechSynthesis.cancel();
+	const u = new SpeechSynthesisUtterance(text);
+	const prefix = voices[language];
+	const voice = window.speechSynthesis
+		.getVoices()
+		.find((v) => v.lang.toLowerCase().startsWith(prefix));
+	if (voice) {
+		u.voice = voice;
+		u.lang = voice.lang;
+	} else {
+		u.lang = prefix;
 	}
+	window.speechSynthesis.speak(u);
+}
 
 	function start(index: number) {
 		if (index === 1) screen = 'guide';
@@ -71,65 +80,58 @@
 						<span class="task-copy"><strong>{task[0]}</strong><span>{task[1]}</span><small>{t.areas[index]}</small></span>
 						<Icon name="chevron" />
 					</button>
-				{/each}
-			</div>
-			<button class="profile-banner" onclick={() => (screen = 'profile')}>
-				<span><Icon name="profile" /></span>
-				<strong>{t.profile}</strong>
-				<Icon name="chevron" />
-			</button>
-		</main>
-	{:else if screen === 'guide'}
-		{#key language}
-			<Guide {t} onExit={() => (screen = 'profile')} {speak} />
-		{/key}
-	{:else if screen === 'profile'}
-		<main class="screen-content profile-screen">
-			<section class="intro">
-				<p class="eyebrow">DIGICOMP</p>
-				<h1>{t.profileTitle}</h1>
-				<p>{t.profileHint}</p>
-			</section>
-			<div class="ability-new">
-				<Icon name="spark" /><span><small>{t.newAbility}</small><strong>{t.abilities[1]}</strong></span>
-			</div>
-			<div class="ability-list">
-				{#each t.abilities as ability, index (ability)}
-					<article class="ability-card {areaClasses[index]}">
-						<div class="ability-top">
-							<span class="task-icon"><Icon name={taskIcons[index]} /></span>
-							<strong>{t.areas[index]}</strong>
-							{#if index < 2}<Icon name="check" />{/if}
-						</div>
-						<p>{ability}</p>
-						<div class="growth-track" aria-label={index < 2 ? 'Förmåga tillagd' : 'Nästa steg'}>
-							<span style="width:{index === 0 ? '60%' : index === 1 ? '45%' : '10%'}"></span>
-						</div>
-					</article>
-				{/each}
-			</div>
-		</main>
-	{:else}
-		<main class="screen-content teacher-screen">
-			<section class="intro">
-				<p class="eyebrow">STEGVIS FÖR LÄRARE</p>
-				<h1>{t.teacher}</h1>
-				<p>{t.teacherHint}</p>
-			</section>
-			<div class="group-pill"><Icon name="briefcase" /><strong>{t.group}</strong></div>
-			<h2>Gemensamma övningsbehov</h2>
-			<div class="need-list">
-				{#each t.needs as need, index (need[0])}
-					{@const area = [2, 3, 0][index]}
-					<article class="need-card {areaClasses[area]}">
-						<span class="task-icon"><Icon name={taskIcons[area]} /></span>
-						<p><strong>{need[0]}</strong><span>{need[1]}</span></p>
-					</article>
-				{/each}
-			</div>
-			<div class="privacy-note"><Icon name="shield" /><p>{t.privacy}</p></div>
-		</main>
-	{/if}
+				</main>
+			{:else if screen === 'guide'}
+				{#key language}
+						<Guide {t} {language} onExit={() => (screen = 'profile')} {speak} />
+				{/key}
+			{:else if screen === 'profile'}
+				<main class="screen-content profile-screen">
+					<section class="intro">
+						<p class="eyebrow">DIGICOMP</p>
+						<h1>{t.profileTitle}</h1>
+						<p>{t.profileHint}</p>
+					</section>
+					<div class="ability-new">
+						<Icon name="spark" /><span><small>{t.newAbility}</small><strong>{t.abilities[1]}</strong></span>
+					</div>
+					<div class="ability-list">
+						{#each t.abilities as ability, index (ability)}
+							<article class="ability-card {areaClasses[index]}">
+								<div class="ability-top">
+									<span class="task-icon"><Icon name={taskIcons[index]} /></span>
+									<strong>{t.areas[index]}</strong>
+									{#if index < 2}<Icon name="check" />{/if}
+								</div>
+								<p>{ability}</p>
+								<div class="growth-track" aria-label={index < 2 ? 'Förmåga tillagd' : 'Nästa steg'}>
+									<span style="width:{index === 0 ? '60%' : index === 1 ? '45%' : '10%'}"></span>
+								</div>
+							</article>
+						{/each}
+					</div>
+				</main>
+			{:else}
+				<main class="screen-content teacher-screen">
+					<section class="intro">
+						<p class="eyebrow">STEGVIS FÖR LÄRARE</p>
+						<h1>{t.teacher}</h1>
+						<p>{t.teacherHint}</p>
+					</section>
+					<div class="group-pill"><Icon name="briefcase" /><strong>{t.group}</strong></div>
+					<h2>Gemensamma övningsbehov</h2>
+					<div class="need-list">
+						{#each t.needs as need, index (need[0])}
+							{@const area = [2, 3, 0][index]}
+							<article class="need-card {areaClasses[area]}">
+								<span class="task-icon"><Icon name={taskIcons[area]} /></span>
+								<p><strong>{need[0]}</strong><span>{need[1]}</span></p>
+							</article>
+						{/each}
+					</div>
+					<div class="privacy-note"><Icon name="shield" /><p>{t.privacy}</p></div>
+				</main>
+			{/if}
 
 	<nav class="bottom-nav" aria-label="Huvudmeny">
 		<button class={screen === 'tasks' || screen === 'guide' ? 'active' : ''} onclick={() => (screen = 'tasks')}>

@@ -1,8 +1,14 @@
 <script lang="ts">
 	import Icon from './Icon.svelte';
-	import type { Copy, IconName } from './copy';
+	import { listen } from './listen';
+	import type { Copy, IconName, Language } from './copy';
 
-	let { t, onExit, speak }: { t: Copy; onExit: () => void; speak: (text: string) => void } = $props();
+	let { t, language, onExit, speak }: {
+		t: Copy;
+		language: Language;
+		onExit: () => void;
+		speak: (text: string) => void;
+	} = $props();
 
 	let step = $state(0);
 	let confirmation = $state('');
@@ -10,6 +16,7 @@
 	let showing = $state(false);
 	let quiet = $state(false);
 	let reply = $state('');
+	let listening = $state(false);
 
 	const icons: IconName[] = ['spark', 'voice', 'translate', 'check'];
 	const inputTarget = $derived(step === 1 || step === 2 ? step : -1);
@@ -70,6 +77,25 @@
 		if (step === 2 && first) complete();
 	}
 
+	async function mic() {
+		if (step !== 2 || listening) return;
+		window.speechSynthesis?.cancel();
+		listening = true;
+		notice = '🎤 …';
+		try {
+			const text = await listen(language);
+			notice = '';
+			if (text) {
+				const first = reply.length === 0;
+				reply = text;
+				if (first) complete();
+			}
+		} catch {
+			notice = t.wrong;
+		}
+		listening = false;
+	}
+
 	function mockClick(e: MouseEvent) {
 		if ((e.target as HTMLElement).dataset.wrong) wrong();
 	}
@@ -106,7 +132,9 @@
 			</div>
 			{#if step === 0}
 				<div class={cls(0)}>
-					<span class="pointer" aria-label="Pilen pekar på rätt val"><Icon name="arrow" size={34} /></span>
+					<span class="pointer" aria-label="Pilen pekar på rätt val"
+						><Icon name="arrow" size={34} /></span
+					>
 					<button class="message-row" onclick={complete}>
 						<span class="school-avatar">S</span>
 						<span><strong>{t.school}</strong><small>{t.message}</small></span>
@@ -115,12 +143,15 @@
 				</div>
 			{:else}
 				<div class="conversation">
-					<span class="school-avatar">S</span><div class="bubble">{t.message}</div>
+					<span class="school-avatar">S</span>
+					<div class="bubble">{t.message}</div>
 				</div>
 				<div class="composer-wrap">
 					<div class={cls(inputTarget)}>
 						{#if step === inputTarget}
-							<span class="pointer" aria-label="Pilen pekar på rätt val"><Icon name="arrow" size={34} /></span>
+							<span class="pointer" aria-label="Pilen pekar på rätt val"
+								><Icon name="arrow" size={34} /></span
+							>
 						{/if}
 						<input
 							class="composer"
@@ -132,11 +163,29 @@
 							oninput={typed}
 						/>
 					</div>
+					<button
+						class="send-button"
+						class:recording={listening}
+						aria-label="Mikrofon"
+						disabled={step !== 2 || listening}
+						onclick={mic}
+					>
+						<svg class="icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+							<rect x="9" y="3" width="6" height="11" rx="3" />
+							<path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6" />
+						</svg>
+					</button>
 					<div class={cls(3)}>
 						{#if step === 3}
-							<span class="pointer" aria-label="Pilen pekar på rätt val"><Icon name="arrow" size={34} /></span>
+							<span class="pointer" aria-label="Pilen pekar på rätt val"
+								><Icon name="arrow" size={34} /></span
+							>
 						{/if}
-						<button class="send-button" aria-label={t.steps[3]} onclick={() => (step === 3 ? complete() : wrong())}>
+						<button
+							class="send-button"
+							aria-label={t.steps[3]}
+							onclick={() => (step === 3 ? complete() : wrong())}
+						>
 							<Icon name="send" size={22} />
 						</button>
 					</div>

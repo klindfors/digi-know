@@ -186,6 +186,9 @@ h2 { margin: 1.5rem 0 0.75rem; font-size: 1.15rem; line-height: 1.25; }
 .need-card p span { color: var(--dark-grey); font-size: 0.9rem; }
 .privacy-note { margin-top: 1rem; padding: 1rem; display: flex; gap: 0.7rem; color: var(--black); background: var(--light-grey); border-radius: var(--radius); }
 .privacy-note p { margin: 0; font-size: 0.9rem; line-height: 1.4; }
+.send-button:disabled { opacity: 0.4; cursor: not-allowed; }
+.send-button.recording { background: var(--error); opacity: 1; animation: micPulse 1s ease-in-out infinite; }
+@keyframes micPulse { 50% { box-shadow: 0 0 0 0.5rem rgb(221 31 38 / 25%); } }
 
 .bottom-nav {
   position: fixed; z-index: 20; bottom: 0; left: 0; right: 0; min-height: 4.75rem; padding-bottom: env(safe-area-inset-bottom, 0px); margin-top: auto; display: grid; grid-template-columns: repeat(3, 1fr);
