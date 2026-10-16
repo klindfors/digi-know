@@ -39,56 +39,45 @@ function speak(text: string) {
 	}
 </script>
 
-<div class="page-shell">
-	<div class="desktop-brand"><div class="brand-mark">S</div><span>StegVis</span></div>
-	<div class="phone-frame">
-		<div class="phone-app">
-			<header class="app-header">
-				{#if screen !== 'tasks'}
-					<button class="icon-button" onclick={() => (screen = 'tasks')} aria-label="Gå tillbaka"><Icon name="back" /></button>
-				{:else}
-					<div class="mark" aria-hidden="true"><span>S</span></div>
-				{/if}
-				<div class="header-actions">
-					<button
-						class="tool-button"
-						onclick={() => speak(screen === 'tasks' ? `${t.choose}. ${t.chooseHint}` : t.profileTitle)}
-					>
-						<Icon name="voice" size={20} /><span>{t.voice}</span>
-					</button>
-					<label class="language-control">
-						   <span aria-hidden="true" style="font-size:1.25rem">{({ sv: '🇸🇪', en: '🇬🇧', so: '🇸🇴', ar: 'ع', ti: '🇪🇷' })[language]}</span>
-						<span class="language-label">{t.language}</span>
-						<select class="language-select-overlay" bind:value={language} aria-label={t.language}>
-							<option value="sv">Svenska</option>
-							<option value="en">English</option>
-							<option value="ar">العربية</option>
-							<option value="so">Soomaali</option>
-							<option value="ti">ትግርኛ</option>
-						</select>
-					</label>
-				</div>
-			</header>
+<div class="app">
+	<header class="app-header">
+		{#if screen !== 'tasks'}
+			<button class="icon-button" onclick={() => (screen = 'tasks')} aria-label="Gå tillbaka"><Icon name="back" /></button>
+		{:else}
+			<div class="mark" aria-hidden="true"><span>S</span></div>
+		{/if}
+		<div class="header-actions">
+			<button
+				class="tool-button"
+				onclick={() => speak(screen === 'tasks' ? `${t.choose}. ${t.chooseHint}` : t.profileTitle)}
+			>
+				<Icon name="voice" size={20} /><span>{t.voice}</span>
+			</button>
+			<label class="language-control">
+				<span aria-hidden="true" style="font-size:1.25rem">{({ sv: '🇸🇪', en: '🇬🇧', so: '🇸🇴', ar: 'ع' })[language]}</span>
+				<span class="language-label">{t.language}</span>
+				<select class="language-select-overlay" bind:value={language} aria-label={t.language}>
+					<option value="sv">Svenska</option>
+					<option value="en">English</option>
+					<option value="ar">العربية</option>
+					<option value="so">Soomaali</option>
+				</select>
+			</label>
+		</div>
+	</header>
 
-			{#if screen === 'tasks'}
-				<main class="screen-content task-screen">
-					<section class="intro">
-						<p class="eyebrow">STEGVIS</p>
-						<h1>{t.choose}</h1>
-						<p>{t.chooseHint}</p>
-					</section>
-					<div class="task-list">
-						{#each t.tasks as task, index (task[0])}
-							<button class="task-card {areaClasses[index]}" onclick={() => start(index)}>
-								<span class="task-icon"><Icon name={taskIcons[index]} size={28} /></span>
-								<span class="task-copy"><strong>{task[0]}</strong><span>{task[1]}</span><small>{t.areas[index]}</small></span>
-								<Icon name="chevron" />
-							</button>
-						{/each}
-					</div>
-					<button class="profile-banner" onclick={() => (screen = 'profile')}>
-						<span><Icon name="profile" /></span>
-						<strong>{t.profile}</strong>
+	{#if screen === 'tasks'}
+		<main class="screen-content task-screen">
+			<section class="intro">
+				<p class="eyebrow">STEGVIS</p>
+				<h1>{t.choose}</h1>
+				<p>{t.chooseHint}</p>
+			</section>
+			<div class="task-list">
+				{#each t.tasks as task, index (task[0])}
+					<button class="task-card {areaClasses[index]}" onclick={() => start(index)}>
+						<span class="task-icon"><Icon name={taskIcons[index]} size={28} /></span>
+						<span class="task-copy"><strong>{task[0]}</strong><span>{task[1]}</span><small>{t.areas[index]}</small></span>
 						<Icon name="chevron" />
 					</button>
 				</main>
@@ -144,24 +133,15 @@ function speak(text: string) {
 				</main>
 			{/if}
 
-			<nav class="bottom-nav" aria-label="Huvudmeny">
-				<button class={screen === 'tasks' || screen === 'guide' ? 'active' : ''} onclick={() => (screen = 'tasks')}>
-					<Icon name="calendar" /><span>{t.home}</span>
-				</button>
-				<button class={screen === 'profile' ? 'active' : ''} onclick={() => (screen = 'profile')}>
-					<Icon name="profile" /><span>{t.profile}</span>
-				</button>
-				<button class={screen === 'teacher' ? 'active' : ''} onclick={() => (screen = 'teacher')}>
-					<Icon name="briefcase" /><span>{t.teacher}</span>
-				</button>
-			</nav>
-		</div>
-	</div>
-	<aside class="annotations" aria-label="Design annotations">
-		<strong>Behavioural notes</strong>
-		<span>Keyboard-ready controls · 56 px primary targets</span>
-		<span>Voice, visual and text guidance work together</span>
-		<span>No time limits · errors are calm and non-judgemental</span>
-		<span>Responsive at 320 px and text can reflow at 200%</span>
-	</aside>
+	<nav class="bottom-nav" aria-label="Huvudmeny">
+		<button class={screen === 'tasks' || screen === 'guide' ? 'active' : ''} onclick={() => (screen = 'tasks')}>
+			<Icon name="calendar" /><span>{t.home}</span>
+		</button>
+		<button class={screen === 'profile' ? 'active' : ''} onclick={() => (screen = 'profile')}>
+			<Icon name="profile" /><span>{t.profile}</span>
+		</button>
+		<button class={screen === 'teacher' ? 'active' : ''} onclick={() => (screen = 'teacher')}>
+			<Icon name="briefcase" /><span>{t.teacher}</span>
+		</button>
+	</nav>
 </div>
