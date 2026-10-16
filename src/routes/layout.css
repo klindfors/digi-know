@@ -53,13 +53,13 @@ button { color: inherit; }
 }
 .icon { display: block; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-.page-shell { min-height: 100vh; padding: 2.25rem 1rem 3rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-.desktop-brand { display: flex; align-items: center; gap: 0.7rem; font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; }
+.page-shell { min-height: 100vh; min-height: 100dvh; padding: 0; display: block; }
+.desktop-brand, .annotations { display: none; }
 .brand-mark, .mark { display: grid; place-items: center; color: var(--white); background: var(--pink); font-weight: 900; }
 .brand-mark { width: 2.25rem; height: 2.25rem; border-radius: 0.65rem; transform: rotate(-3deg); }
 .brand-mark::first-letter { transform: rotate(3deg); }
-.phone-frame { width: 100%; max-width: 24.375rem; min-height: min(50rem, calc(100dvh - 7rem)); background: var(--deep-black); border-radius: 2.5rem; padding: 0.5rem; box-shadow: var(--shadow); }
-.phone-app { position: relative; min-height: min(49rem, calc(100dvh - 8rem)); height: min(49rem, calc(100dvh - 8rem)); overflow: hidden; background: var(--background); border-radius: 2rem; display: flex; flex-direction: column; }
+.phone-frame { width: 100%; max-width: none; min-height: 100vh; min-height: 100dvh; padding: 0; border-radius: 0; background: var(--background); box-shadow: none; }
+.phone-app { position: relative; min-height: 100vh; min-height: 100dvh; height: 100vh; height: 100dvh; overflow: hidden; background: var(--background); border-radius: 0; display: flex; flex-direction: column; }
 .phone-app::-webkit-scrollbar { display: none; }
 
 .app-header {
@@ -68,8 +68,8 @@ button { color: inherit; }
   background: rgb(245 243 238 / 94%); backdrop-filter: blur(0.75rem); border-bottom: 1px solid var(--light-grey);
 }
 .mark { width: 2.65rem; height: 2.65rem; border-radius: 0.8rem; font-size: 1.2rem; }
-.city-logo { width: 2.65rem; height: 2.65rem; flex: 0 0 auto; display: grid; place-items: center; }
-.city-logo img { display: block; width: auto; height: 100%; object-fit: contain; }
+.city-logo { width: auto; max-width: 8.5rem; height: 2.65rem; flex: 0 0 auto; display: grid; place-items: center; }
+.city-logo img { display: block; width: auto; max-width: 8.5rem; height: 100%; object-fit: contain; }
 .header-actions { display: flex; gap: 0.5rem; align-items: center; }
 .icon-button, .tool-button, .language-control {
   min-height: 2.75rem; border: 1px solid var(--grey); background: var(--white); border-radius: var(--radius-sm);
